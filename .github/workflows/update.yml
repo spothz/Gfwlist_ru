@@ -1,0 +1,24 @@
+name: Update GFW List
+
+on:
+  schedule:
+    - cron: '0 12 * * *'  # Ежедневно в 12:00 UTC
+  workflow_dispatch:       # Ручной запуск
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download and rename file
+        run: |
+          curl -sSLo gfwlist.txt https://antizapret.prostovpn.org/domains-export.txt
+
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: "GitHub Actions"
+          message: "Auto-update gfwlist.txt"
+          add: "gfwlist.txt"
