@@ -2,24 +2,24 @@ name: GFWList Auto-Update
 
 on:
   schedule:
-    - cron: '0 12 * * *'  # 12:00 UTC daily
+    - cron: '0 12 * * *'  # Ежедневно в 12:00 UTC
   workflow_dispatch:
 
 permissions:
-  contents: write  # Явно выдаем права на запись
+  contents: write  # Права на запись
 
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # Актуальная версия
 
       - name: Download latest list
         run: curl -sSfL -o gfwlist.txt https://antizapret.prostovpn.org/domains-export.txt
 
       - name: Commit changes
-        uses: EndBug/add-and-commit@v11
+        uses: EndBug/add-and-commit@v9  # Последняя стабильная версия
         with:
           add: gfwlist.txt
           message: "chore: auto-update gfwlist"
