@@ -15,12 +15,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4  # Актуальная версия
 
-      - name: Download latest list
+      - name: Download GFWList
         run: curl -sSfL -o gfwlist.txt https://antizapret.prostovpn.org/domains-export.txt
 
+      - name: Download China List
+        run: curl -sSfL -o accelerated-domains.china.conf https://fastly.jsdelivr.net/gh/felixonmars/dnsmasq-china-list/accelerated-domains.china.conf
+
+      - name: Convert China List for Russia
+        run: |
+          awk -F'/' '
+            /yandex\.ru/ || /mail\.ru/ || /rbc\.ru/ || /tinkoff\.ru/ || /ozon\.ru/ || /wildberries\.ru/ || /sber\.ru/ {
+              print $1"/"$2"/common.dot.dns.yandex.net"
+            }
+          ' accelerated-domains.china.conf > accelerated-domains.russia.conf
+
       - name: Commit changes
-        uses: EndBug/add-and-commit@v9  # Последняя стабильная версия
+        uses: EndBug/add-and-commit@v9
         with:
-          add: gfwlist.txt
-          message: "chore: auto-update gfwlist"
-          token: ${{ secrets.GH_TOKEN }}  # Явная передача токена
+          add: gfwlist.txt accelerated-domains.russia.conf
+          message: "chore: auto-update lists"
+          token: ${{ secrets.GH_TOKEN }}
+          
