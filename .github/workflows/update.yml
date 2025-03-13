@@ -22,7 +22,7 @@ jobs:
         run: curl -sSfL -o accelerated-domains.china.conf https://fastly.jsdelivr.net/gh/felixonmars/dnsmasq-china-list/accelerated-domains.china.conf
 
       - name: Replace DNS in China List
-        run: sed 's|/[^/]*$|/common.dot.dns.yandex.net|' accelerated-domains.china.conf > accelerated-domains.russia.conf
+        run: sed 's|/[^/]*$|/77.88.8.8|' accelerated-domains.china.conf > accelerated-domains.russia.conf
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
