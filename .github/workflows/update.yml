@@ -21,13 +21,8 @@ jobs:
       - name: Download China List
         run: curl -sSfL -o accelerated-domains.china.conf https://fastly.jsdelivr.net/gh/felixonmars/dnsmasq-china-list/accelerated-domains.china.conf
 
-      - name: Convert China List for Russia
-        run: |
-          awk -F'/' '
-            /yandex\.ru/ || /mail\.ru/ || /rbc\.ru/ || /tinkoff\.ru/ || /ozon\.ru/ || /wildberries\.ru/ || /sber\.ru/ {
-              print $1"/"$2"/common.dot.dns.yandex.net"
-            }
-          ' accelerated-domains.china.conf > accelerated-domains.russia.conf
+      - name: Replace DNS in China List
+        run: sed 's|/[^/]*$|/common.dot.dns.yandex.net|' accelerated-domains.china.conf > accelerated-domains.russia.conf
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
